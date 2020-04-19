@@ -4,6 +4,7 @@ public final class Constants {
 
     public static final int ACCOUNT_NUMBER_LENGTH = 16;
     public static final long DEFAULT_BALANCE_CENTS = 0L;
+    public static final long HUNDRED_CENTS = 100L;
 
     private Constants() {
         // Prohibit initialization. This class is supposed to contain only constants.

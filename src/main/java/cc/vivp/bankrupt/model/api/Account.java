@@ -1,7 +1,6 @@
 package cc.vivp.bankrupt.model.api;
 
 import cc.vivp.bankrupt.model.AccountType;
-import java.math.BigDecimal;
 import lombok.Data;
 
 @Data

@@ -11,9 +11,9 @@ import cc.vivp.bankrupt.model.db.AccountEntity;
 import cc.vivp.bankrupt.model.db.TransferEntity;
 import cc.vivp.bankrupt.repository.AccountsRepository;
 import cc.vivp.bankrupt.repository.TransfersRepository;
+import cc.vivp.bankrupt.util.Constants;
 import cc.vivp.bankrupt.util.MessageKeys;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +36,8 @@ public class TransferEvent extends DomainEvent<TransferReceipt> {
     @Override
     public TransferReceipt process() throws DomainException {
 
-        AccountEntity source = null;
-        AccountEntity target = null;
+        AccountEntity source;
+        AccountEntity target;
         try {
 
             source = throwEntityNotFoundExceptionIfNotPresentElseReturnValue(
@@ -74,12 +74,11 @@ public class TransferEvent extends DomainEvent<TransferReceipt> {
             transferAmount,
             transferCommand.getSource(), transferCommand.getDescription());
 
-        return new TransferReceipt(paymentReference, source.getAccountNumber(),
-            BigDecimal.valueOf(transferAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.DOWN),
+        return new TransferReceipt(paymentReference, source.getAccountNumber(), String.valueOf(transferAmount),
             transferCommand.getTarget(), transferCommand.getDescription(), recorded);
     }
 
     private Long convertToCents(final BigDecimal amount) {
-        return amount.multiply(BigDecimal.valueOf(100L)).longValue();
+        return amount.multiply(BigDecimal.valueOf(Constants.HUNDRED_CENTS)).longValue();
     }
 }

@@ -1,11 +1,6 @@
-# OIDC Configuration
 quarkus:
   http:
     cors: true
-#  oauth2:
-#    client-id: M69JEIq5uTX1D80sdK0V9Ydx38I2Sdgi
-#    client-secret: 0nUaVVkha2FcWqPsm0J5K_gbDNOviDqkz2VE-ofJVqUHk3ue9s3V7dVrIbbVj4dH
-#    introspection-url: https://vivekprajapati.auth0.com/oauth/token
   datasource:
     db-kind: h2
     username: vivp

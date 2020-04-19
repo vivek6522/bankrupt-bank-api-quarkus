@@ -13,7 +13,7 @@ public class ApiError {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime timestamp;
     private String message;
-    private List<ApiSubError> subErrors;
+    private List<ApiError> subErrors;
 
     public ApiError(int status) {
         this(status, "Unexpected error", new ArrayList<>());
@@ -23,14 +23,14 @@ public class ApiError {
         this(status, message, new ArrayList<>());
     }
 
-    public ApiError(int status, String message, List<ApiSubError> subErrors) {
+    public ApiError(int status, String message, List<ApiError> subErrors) {
         timestamp = LocalDateTime.now();
         this.status = status;
         this.message = message;
         this.subErrors = subErrors;
     }
 
-    public void addSubError(ApiSubError subError) {
+    public void addSubError(ApiError subError) {
         subErrors.add(subError);
     }
 }
