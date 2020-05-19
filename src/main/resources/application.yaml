@@ -1,6 +1,7 @@
 quarkus:
   http:
     cors: true
+    port: 18080
   datasource:
     db-kind: h2
     username: vivp
