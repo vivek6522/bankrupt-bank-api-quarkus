@@ -1,8 +1,9 @@
 package cc.vivp.bankrupt;
 
+import static cc.vivp.bankrupt.util.Generic.convertFromCents;
+import static cc.vivp.bankrupt.util.Generic.convertToCents;
+
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 
 import javax.enterprise.inject.Produces;
 import javax.ws.rs.ext.Provider;
@@ -14,7 +15,6 @@ import cc.vivp.bankrupt.model.api.Account;
 import cc.vivp.bankrupt.model.api.TransferReceipt;
 import cc.vivp.bankrupt.model.db.AccountEntity;
 import cc.vivp.bankrupt.model.db.TransferEntity;
-import cc.vivp.bankrupt.util.Constants;
 
 @Provider
 public class DependencyProvider {
@@ -22,9 +22,8 @@ public class DependencyProvider {
   @Produces
   public ModelMapper modelMapper() {
 
-    Converter<BigDecimal, Long> toCents = context -> context.getSource().multiply(BigDecimal.valueOf(100L)).longValue();
-    Converter<Long, String> fromCents = context -> new DecimalFormat("###,###,###,###.00").format(BigDecimal
-        .valueOf(context.getSource()).divide(BigDecimal.valueOf(Constants.HUNDRED_CENTS), 2, RoundingMode.DOWN));
+    Converter<BigDecimal, Long> toCents = context -> convertToCents(context.getSource());
+    Converter<Long, String> fromCents = context -> convertFromCents(context.getSource());
 
     ModelMapper modelMapper = new ModelMapper();
     modelMapper.typeMap(AccountEntity.class, Account.class)

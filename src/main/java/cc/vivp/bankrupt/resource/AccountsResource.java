@@ -48,17 +48,6 @@ public class AccountsResource {
   }
 
   @GET
-  @Path("{customerId}")
-  public List<Account> fetchAllAccountDetailsForCustomer(@PathParam("customerId") String customerId,
-      @Context SecurityContext securityContext) throws EntityNotFoundException, NoAccountsYetException {
-    List<Account> allAccountDetails = accountService.fetchAllAccountDetails(customerId);
-    if (allAccountDetails.isEmpty()) {
-      throw new NoAccountsYetException(MessageKeys.NO_ACCOUNTS_EXIST_YET);
-    }
-    return allAccountDetails;
-  }
-
-  @GET
   @Path("self")
   public List<Account> fetchAllAccountDetailsForSelf(@Context SecurityContext securityContext)
       throws EntityNotFoundException, NoAccountsYetException {

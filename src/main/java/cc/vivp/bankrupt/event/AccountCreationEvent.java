@@ -6,6 +6,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 
 import cc.vivp.bankrupt.exception.AccountCreationException;
+import cc.vivp.bankrupt.model.AccountType;
 import cc.vivp.bankrupt.model.api.Account;
 import cc.vivp.bankrupt.model.api.AccountCommand;
 import cc.vivp.bankrupt.model.db.AccountEntity;
@@ -38,15 +39,16 @@ public class AccountCreationEvent extends DomainEvent<Account> {
       throw new AccountCreationException(MessageKeys.ORPHAN_ACCOUNT);
     }
 
-    AccountEntity newAccount = new AccountEntity();
-    newAccount.setAccountNumber(RandomStringUtils.randomNumeric(Constants.ACCOUNT_NUMBER_LENGTH));
-    newAccount.setAccountType(accountCommand.getAccountType());
-    newAccount.setBalance(Constants.DEFAULT_BALANCE_CENTS);
-    newAccount.setCustomerId(accountCommand.getCustomerId());
+    boolean isPreferredAccountPresent = accountsRepository.find("customerId = ?1", accountCommand.getCustomerId())
+        .stream().anyMatch(account -> AccountType.CURRENT == account.getAccountType());
+
+    AccountEntity newAccount = new AccountEntity(RandomStringUtils.randomNumeric(Constants.ACCOUNT_NUMBER_LENGTH),
+        accountCommand.getAccountType(), Constants.DEFAULT_BALANCE_CENTS, accountCommand.getCustomerId(),
+        !isPreferredAccountPresent);
 
     accountsRepository.persist(newAccount);
-    log.info("{};{};{};{};{}", occurred, recorded, newAccount.getAccountNumber(), newAccount.getAccountType(),
-        accountCommand.getCustomerId());
+    log.info(LOG_START + "[accountNumber={}];[accountType={}];[customerId={}];", occurred, recorded,
+        newAccount.getAccountNumber(), newAccount.getAccountType(), accountCommand.getCustomerId());
 
     return modelMapper.map(newAccount, Account.class);
   }

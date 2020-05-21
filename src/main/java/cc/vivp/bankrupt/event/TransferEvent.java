@@ -1,8 +1,9 @@
 package cc.vivp.bankrupt.event;
 
+import static cc.vivp.bankrupt.util.Generic.convertFromCents;
+import static cc.vivp.bankrupt.util.Generic.convertToCents;
 import static cc.vivp.bankrupt.util.Generic.throwEntityNotFoundExceptionIfNotPresentElseReturnValue;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -15,7 +16,6 @@ import cc.vivp.bankrupt.model.db.AccountEntity;
 import cc.vivp.bankrupt.model.db.TransferEntity;
 import cc.vivp.bankrupt.repository.AccountsRepository;
 import cc.vivp.bankrupt.repository.TransfersRepository;
-import cc.vivp.bankrupt.util.Constants;
 import cc.vivp.bankrupt.util.MessageKeys;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,21 +62,20 @@ public class TransferEvent extends DomainEvent<TransferReceipt> {
     TransferEntity transferEntity = new TransferEntity(paymentReference, source.getAccountNumber(),
         Math.negateExact(transferAmount), target.getAccountNumber(), transferCommand.getDescription(), recorded);
     transfersRepository.persist(transferEntity);
-    log.info("{};{};{};{};{};{};{}", occurred, recorded, paymentReference, transferCommand.getSource(),
-        Math.negateExact(transferAmount), transferCommand.getTarget(), transferCommand.getDescription());
+    log.info(LOG_START + "[paymentReference={}];[source={}];[amount={}];[target={}];[description={}];", occurred,
+        recorded, paymentReference, transferCommand.getSource(), Math.negateExact(transferAmount),
+        transferCommand.getTarget(), transferCommand.getDescription());
 
     accountsRepository.persist(target);
     transferEntity = new TransferEntity(paymentReference, target.getAccountNumber(), transferAmount,
         source.getAccountNumber(), transferCommand.getDescription(), recorded);
     transfersRepository.persist(transferEntity);
-    log.info("{};{};{};{};{};{};{}", occurred, recorded, paymentReference, transferCommand.getTarget(), transferAmount,
-        transferCommand.getSource(), transferCommand.getDescription());
+    log.info(LOG_START + "[paymentReference={}];[source={}];[amount={}];[target={}];[description={}];", occurred,
+        recorded, paymentReference, transferCommand.getTarget(), transferAmount, transferCommand.getSource(),
+        transferCommand.getDescription());
 
-    return new TransferReceipt(paymentReference, source.getAccountNumber(), String.valueOf(transferAmount),
+    return new TransferReceipt(paymentReference, source.getAccountNumber(), convertFromCents(-transferAmount),
         transferCommand.getTarget(), transferCommand.getDescription(), recorded);
   }
 
-  private Long convertToCents(final BigDecimal amount) {
-    return amount.multiply(BigDecimal.valueOf(Constants.HUNDRED_CENTS)).longValue();
-  }
 }
