@@ -16,6 +16,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.metrics.MetricUnits;
+import org.eclipse.microprofile.metrics.annotation.Metered;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 
 import cc.vivp.bankrupt.exception.DomainException;
 import cc.vivp.bankrupt.exception.EntityNotFoundException;
@@ -40,6 +43,8 @@ public class TransfersResource {
 
   @POST
   @Transactional
+  @Metered(name = "fundTransfersPerSecond", unit = MetricUnits.SECONDS, absolute = true)
+  @Timed(name = "initiateFundsTransferTimer", absolute = true, unit = MetricUnits.MILLISECONDS)
   public TransferReceipt initiateFundsTransfer(@Valid TransferCommand transferCommand) throws DomainException {
     return transferService.initiateFundsTransfer(transferCommand);
   }
@@ -53,6 +58,7 @@ public class TransfersResource {
 
   @GET
   @Path("account/{source}")
+  @Metered(name = "transactionHistoriesFetchedPerSecond", unit = MetricUnits.SECONDS, absolute = true)
   public List<TransferReceipt> fetchTransactionHistory(@PathParam("source") String source,
       @Context SecurityContext securityContext) {
     return transferService.fetchTransactionHistory(source);

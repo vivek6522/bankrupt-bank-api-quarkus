@@ -13,6 +13,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
+import org.eclipse.microprofile.metrics.MetricUnits;
+import org.eclipse.microprofile.metrics.annotation.Metered;
+import org.eclipse.microprofile.metrics.annotation.Timed;
+
 import cc.vivp.bankrupt.exception.AccessDeniedException;
 import cc.vivp.bankrupt.exception.AccountCreationException;
 import cc.vivp.bankrupt.exception.EntityNotFoundException;
@@ -37,6 +41,7 @@ public class AccountsResource {
 
   @GET
   @Path("{accountNumber}")
+  @Metered(name = "accountDetailsFetchedPerSecond", unit = MetricUnits.SECONDS, absolute = true)
   public Account fetchAccountDetails(@PathParam("accountNumber") String accountNumber,
       @Context SecurityContext securityContext) throws EntityNotFoundException, AccessDeniedException {
     Account requestedAccount = accountService.fetchAccountDetails(accountNumber,
@@ -49,6 +54,7 @@ public class AccountsResource {
 
   @GET
   @Path("self")
+  @Metered(name = "selfAccountsFetchedPerSecond", unit = MetricUnits.SECONDS, absolute = true)
   public List<Account> fetchAllAccountDetailsForSelf(@Context SecurityContext securityContext)
       throws EntityNotFoundException, NoAccountsYetException {
     List<Account> allAccountDetails = accountService
@@ -61,6 +67,8 @@ public class AccountsResource {
 
   @POST
   @Transactional
+  @Metered(name = "accountCreationsPerSecond", unit = MetricUnits.SECONDS, absolute = true)
+  @Timed(name = "createAccountTimer", absolute = true, unit = MetricUnits.MILLISECONDS)
   public Account createAccount(AccountCommand accountCommand, @Context SecurityContext securityContext)
       throws AccountCreationException {
     return accountService.createAccount(accountCommand, securityContext.getUserPrincipal().getName());
