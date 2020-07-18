@@ -33,7 +33,7 @@ public class AccountCreationEvent extends DomainEvent<Account> {
   }
 
   @Override
-  public Account process() throws AccountCreationException {
+  public Account emit() throws AccountCreationException {
 
     if (!loggedInCustomerId.equals(accountCommand.getCustomerId())) {
       throw new AccountCreationException(MessageKeys.ORPHAN_ACCOUNT);

@@ -15,5 +15,5 @@ public abstract class DomainEvent<T> {
     this.recorded = LocalDateTime.now();
   }
 
-  public abstract T process() throws DomainException;
+  public abstract T emit() throws DomainException;
 }

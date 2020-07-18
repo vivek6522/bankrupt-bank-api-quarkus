@@ -32,7 +32,7 @@ public class AccountService {
   public Account createAccount(@Valid AccountCommand accountCommand, @NotBlank String loggedInCustomerId)
       throws AccountCreationException {
     return new AccountCreationEvent(LocalDateTime.now(), accountCommand, loggedInCustomerId, accountsRepository,
-        modelMapper).process();
+        modelMapper).emit();
   }
 
   public Account fetchAccountDetails(@NotBlank String accountNumber, @NotBlank String customerId)

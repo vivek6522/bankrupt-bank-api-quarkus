@@ -35,7 +35,7 @@ public class TransferEvent extends DomainEvent<TransferReceipt> {
   }
 
   @Override
-  public TransferReceipt process() throws DomainException {
+  public TransferReceipt emit() throws DomainException {
 
     AccountEntity source;
     AccountEntity target;

@@ -33,7 +33,7 @@ public class TransferService {
   private final ModelMapper modelMapper;
 
   public TransferReceipt initiateFundsTransfer(@Valid TransferCommand transferCommand) throws DomainException {
-    return new TransferEvent(LocalDateTime.now(), transferCommand, accountsRepository, transfersRepository).process();
+    return new TransferEvent(LocalDateTime.now(), transferCommand, accountsRepository, transfersRepository).emit();
   }
 
   public TransferReceipt fetchByPaymentReferenceAndSource(@NotBlank String paymentReference, @NotBlank String source)

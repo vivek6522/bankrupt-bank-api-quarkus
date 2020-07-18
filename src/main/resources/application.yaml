@@ -1,4 +1,6 @@
 quarkus:
+  package:
+    type: fast-jar
   http:
     cors: true
     port: 18080

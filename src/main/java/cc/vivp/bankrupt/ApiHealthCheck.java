@@ -1,3 +1,5 @@
+package cc.vivp.bankrupt;
+
 import javax.enterprise.context.ApplicationScoped;
 
 import org.eclipse.microprofile.health.HealthCheck;
