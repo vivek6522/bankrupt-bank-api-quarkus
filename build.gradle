@@ -23,6 +23,7 @@ dependencies {
   implementation 'io.quarkus:quarkus-smallrye-jwt'
   implementation 'io.quarkus:quarkus-smallrye-health'
   implementation 'io.quarkus:quarkus-smallrye-metrics'
+  implementation 'io.quarkus:quarkus-smallrye-openapi'
   implementation 'org.eclipse.microprofile.jwt:microprofile-jwt-auth-api:1.1.1'
   implementation 'org.modelmapper:modelmapper:2.3.6'
   implementation 'org.apache.commons:commons-lang3:3.9'

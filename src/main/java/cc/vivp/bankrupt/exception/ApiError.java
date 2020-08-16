@@ -6,14 +6,18 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import lombok.Getter;
 
 @Getter
 public class ApiError {
 
+  @Schema(example = "404")
   private int status;
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
   private LocalDateTime timestamp;
+  @Schema(example = "messages.not_found")
   private String message;
   private List<ApiError> subErrors;
 
